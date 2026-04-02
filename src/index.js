@@ -42,9 +42,10 @@ app.use('/api/user', userRoutes);
 app.use(errorHandler);
 
 export function startServer() {
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-        console.log(`Servidor iniciado na porta ${port}`);
+    const PORT = process.env.PORT || 8080;
+
+    app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
     });
 }
 
