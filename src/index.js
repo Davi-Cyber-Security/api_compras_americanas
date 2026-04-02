@@ -32,12 +32,12 @@ const authLimiter = rateLimit({
     max: 30,
     message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' }
 });
-app.use('/api/auth', authLimiter);
+app.use('api/auth', authLimiter);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/voting', votingRoutes);
-app.use('/api/user', userRoutes);
+app.use('api/auth', authRoutes);
+app.use('api/products', productRoutes);
+app.use('api/voting', votingRoutes);
+app.use('api/user', userRoutes);
 
 app.use(errorHandler);
 
