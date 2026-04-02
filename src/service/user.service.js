@@ -9,10 +9,10 @@ export async function loginUser(email, password) {
     validatePassword(password);
 
     const user = await getUserByEmail(email);
-    if (!user) throw new AppError('Usuário não encontrado.', 404);
+    if (!user) throw new AppError('Usuário não encontrado. Você conhece a penpen ou a neném?', 404);
 
     const isPasswordValid = await comparePassword(password, user.password);
-    if (!isPasswordValid) throw new AppError('Senha incorreta.', 401);
+    if (!isPasswordValid) throw new AppError('Senha incorreta. Por favor digita a senha direito pro servidor não cair caraí.', 401);
 
     const permissions = await getPermissions(user.id);
 
@@ -41,7 +41,7 @@ export async function registerUser(email, password) {
     validatePassword(password);
 
     const existingUser = await getUserByEmail(email);
-    if (existingUser) throw new AppError('Usuário já existe.', 400);
+    if (existingUser) throw new AppError('Usuário já existe paizão. O sistema está funcionando então por favor, não tente criar um usuário com o mesmo e-mail.', 400);
 
     const hashedPassword = await hashPwd(password);
     const result = await createUserRepo(email, hashedPassword);
@@ -68,15 +68,15 @@ export async function registerUser(email, password) {
 
 export async function deleteAccount(userId) {
     const user = await getUserById(userId);
-    if (!user) throw new AppError('Usuário não encontrado.', 404);
+    if (!user) throw new AppError('Usuário não encontrado. Você conhece a penpen ou a neném?', 404);
 
     await deleteUserById(userId);
-    return { message: 'Conta deletada com sucesso.' };
+    return { message: 'Conta deletada com sucesso. Agora você pode ir pro banheiro e se lavar as mãos.' };
 }
 
 export async function getUserProfile(userId) {
     const user = await getUserById(userId);
-    if (!user) throw new AppError('Usuário não encontrado.', 404);
+    if (!user) throw new AppError('Usuário não encontrado. Já bebeu água hoje ou nada?', 404);
 
     const permissions = await getPermissions(userId);
 
