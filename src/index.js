@@ -13,6 +13,8 @@ dotenv.config();
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
@@ -32,12 +34,12 @@ const authLimiter = rateLimit({
     max: 30,
     message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' }
 });
-app.use('api/auth', authLimiter);
+app.use('/api/auth', authLimiter);
 
-app.use('api/auth', authRoutes);
-app.use('api/products', productRoutes);
-app.use('api/voting', votingRoutes);
-app.use('api/user', userRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/voting', votingRoutes);
+app.use('/api/user', userRoutes);
 
 app.use(errorHandler);
 
@@ -45,7 +47,7 @@ export function startServer() {
     const PORT = process.env.PORT || 8080;
 
     app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+        console.log(`Servidor rodando na porta ${PORT}`);
     });
 }
 
