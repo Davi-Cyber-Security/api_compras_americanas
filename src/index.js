@@ -13,6 +13,10 @@ dotenv.config();
 
 const app = express();
 
+app.get('/', (req, res) => {
+    res.send("API Compras Americanas - Sistema de Compras na Americanas");
+});
+
 app.set('trust proxy', 1);
 
 app.use(helmet());
