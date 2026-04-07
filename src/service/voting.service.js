@@ -19,6 +19,11 @@ function toDateStr(date) {
     return `${y}-${m}-${d}`;
 }
 
+function isWeekend(date) {
+    const day = date.getDay();
+    return day === 0 || day === 6; // 0 = domingo, 6 = sábado
+}
+
 async function processYesterdayWinner() {
     const brNow = getBrazilNow();
     const yesterday = new Date(brNow);
@@ -57,6 +62,11 @@ export async function vote(userId, productId) {
     if (!productId) throw new AppError('ID do produto é obrigatório.', 400);
 
     const brNow = getBrazilNow();
+
+    if (isWeekend(brNow)) {
+        throw new AppError('Votação indisponível aos finais de semana. Volte na segunda-feira!', 400);
+    }
+
     if (brNow.getHours() >= 18) {
         throw new AppError('Votação encerrada. O resultado sai às 18:00.', 400);
     }
@@ -73,6 +83,12 @@ export async function vote(userId, productId) {
 
 export async function canUserVote(userId) {
     const brNow = getBrazilNow();
+
+    if (isWeekend(brNow)) {
+        const dayName = brNow.getDay() === 6 ? 'Sábado' : 'Domingo';
+        return { canVote: false, reason: `${dayName}: votação indisponível no fim de semana. Volte na segunda-feira!` };
+    }
+
     if (brNow.getHours() >= 18) {
         return { canVote: false, reason: 'Votação encerrada às 18:00.' };
     }

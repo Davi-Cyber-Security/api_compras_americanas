@@ -34,3 +34,25 @@ export async function updatePermissions(userId, { modification, admin }) {
     const query = `UPDATE permission SET modification = ?, admin = ? WHERE user_id = ?`;
     return await queryDB({ query, values: [modification, admin, userId] });
 }
+
+
+export async function updatePassword(userId, hashedPassword) {
+    const query = `UPDATE users SET password = ? WHERE id = ?`;
+    return await queryDB({ query, values: [hashedPassword, userId] });
+}
+
+export async function getUsersEmail() {
+    const query = `SELECT id, email FROM users`;
+    return await queryDB({ query, values: [] });
+}
+
+export async function getUsersWhoNotVotedToday() {
+    const query = `
+        SELECT u.id, u.email FROM users u
+        WHERE u.id NOT IN (
+            SELECT vh.user_id FROM voting_history vh
+            WHERE vh.vote_date = DATE(CONVERT_TZ(NOW(), '+00:00', '-03:00'))
+        )
+    `;
+    return await queryDB({ query, values: [] });
+}

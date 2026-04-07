@@ -7,15 +7,13 @@ import authRoutes from './routes/auth.routes.js';
 import productRoutes from './routes/products.routes.js';
 import votingRoutes from './routes/voting.routes.js';
 import userRoutes from './routes/user.routes.js';
+import recoverPasswordRoutes from './routes/recoverPassword.routes.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
+import { startScheduler } from './scheduler/voteReminder.scheduler.js';
 
 dotenv.config();
 
 const app = express();
-
-app.get('/', (req, res) => {
-    res.send("API Compras Americanas - Sistema de Compras na Americanas");
-});
 
 app.set('trust proxy', 1);
 
@@ -36,22 +34,24 @@ app.use(limiter);
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 30,
-    message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' }
+    message: { error: 'Muitas tentativas. Tente novamente em 15 minutos.' }
 });
 app.use('/api/auth', authLimiter);
+app.use('/api/recover', authLimiter);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/voting', votingRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/recover', recoverPasswordRoutes);
 
 app.use(errorHandler);
 
 export function startServer() {
     const PORT = process.env.PORT || 8080;
-
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor rodando na porta ${PORT}`);
+        startScheduler();
     });
 }
 
