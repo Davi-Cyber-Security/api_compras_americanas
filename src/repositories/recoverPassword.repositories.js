@@ -7,8 +7,8 @@ export async function saveRecoveryCode(userId, code) {
     });
 
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
-    const query = `INSERT INTO recovery_codes (user_id, code, expires_at) VALUES (?, ?, ?)`;
-    return await queryDB({ query, values: [userId, code, expiresAt] });
+    const query = `INSERT INTO recovery_codes (user_id, code, expires_at) VALUES (?, ?, DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE))`;
+    return await queryDB({ query, values: [userId, code] });
 }
 
 export async function getValidCode(userId, code) {
