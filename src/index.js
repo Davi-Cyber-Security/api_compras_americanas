@@ -51,9 +51,17 @@ app.get('/', (req, res) => {
     res.send("");
 })
 
+app.all("/", (req, res, next) => {
+    if(req.method !== 'GET'){
+        res.status(405).send("Método não permitido.");
+    } else{
+        next();
+    }
+})
+
 export function startServer() {
     const PORT = process.env.PORT || 8080;
-    app.listen(3004, '0.0.0.0', () => {
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor rodando na porta ${PORT}`);
         startScheduler();
     });
