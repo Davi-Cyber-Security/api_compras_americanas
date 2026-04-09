@@ -52,6 +52,8 @@ async function sendReminders(hour) {
                     `🗳️ Lembrete: Vote agora! (${hour}h)`,
                     buildReminderHtml(user.email, MESSAGES[hour])
                 );
+
+                await new Promise(resolve => setTimeout(resolve, 400));
             } catch (err) {
                 console.error(`Erro ao enviar para ${user.email}:`, err.message);
             }
