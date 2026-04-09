@@ -3,8 +3,8 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'api-compras-americanas'
-primary_region = 'gru'
+app = "api-compras-americanas"
+primary_region = "gru"
 
 [build]
 
@@ -14,10 +14,34 @@ primary_region = 'gru'
   auto_stop_machines = false
   auto_start_machines = true
   min_machines_running = 1
-  processes = ['app']
+
+# Define que o serviço HTTP roda o processo "web"
+processes = ["web"]
+
+# Processo web (servidor HTTP sem cron)
+[[processes]]
+name = "web"
+command = "npm run start"  # seu script padrão, que não roda cron
+
+# Processo worker (cron) — roda apenas o scheduler
+[[processes]]
+name = "worker"
+command = "npm run start-cron" # script que só roda o cron (startScheduler)
+
+# Configuração das máquinas para cada processo
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
-  memory_mb = 512
+name = "web-vm"
+memory = "1gb"
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 512
+processes = ["web"]
+
+[[vm]]
+name = "worker-vm"
+memory = "1gb"
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 512
+processes = ["worker"]

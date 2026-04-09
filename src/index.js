@@ -9,7 +9,6 @@ import votingRoutes from './routes/voting.routes.js';
 import userRoutes from './routes/user.routes.js';
 import recoverPasswordRoutes from './routes/recoverPassword.routes.js';
 import { errorHandler } from './middleware/errorHandler.middleware.js';
-import { startScheduler } from './scheduler/voteReminder.scheduler.js';
 
 dotenv.config();
 
@@ -63,7 +62,6 @@ export function startServer() {
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor rodando na porta ${PORT}`);
-        startScheduler();
     });
 }
 
